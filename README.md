@@ -19,9 +19,8 @@
 
 ## 🌐 Live Demo
 
-> **🔗 Live URL**: `[LIVE_URL_PLACEHOLDER](https://gridlock-frontend-production.up.railway.app/)`
+> **🔗 Live URL**: (https://gridlock-frontend-production.up.railway.app/)
 >
-> _(Update this after deployment)_
 
 ---
 
