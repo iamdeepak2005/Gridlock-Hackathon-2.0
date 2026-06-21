@@ -26,11 +26,8 @@ COPY tests/ ./tests/
 # Create directories for runtime data
 RUN mkdir -p trained_models data osmnx_cache
 
-# Copy data if available (optional — can be mounted via volume)
-COPY data/ ./data/ 2>/dev/null || true
+# Optional data/models directories are created above and can be mounted as volumes.
 
-# Copy pre-trained models if available (optional — can be mounted via volume)
-COPY trained_models/ ./trained_models/ 2>/dev/null || true
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=10s --start-period=10s --retries=3 \
