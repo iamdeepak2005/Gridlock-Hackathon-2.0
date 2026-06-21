@@ -1,0 +1,78 @@
+# ─────────────────────────────────────────────────────────────
+#  TRINETRA AI — Root .gitignore
+# ─────────────────────────────────────────────────────────────
+
+# ── Python ────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
+dist/
+build/
+.pytest_cache/
+.mypy_cache/
+
+# ── Node.js ───────────────────────────────────────────────
+node_modules/
+.next/
+out/
+.pnp.*
+.yarn/*
+
+# ── Environment ──────────────────────────────────────────
+.env
+.env.local
+.env.*.local
+!.env.example
+
+# ── Database ─────────────────────────────────────────────
+*.db
+*.sqlite3
+
+# ── ML Models (large binary files) ───────────────────────
+backend/trained_models/*.joblib
+backend/trained_models/impact/
+backend/trained_models/resolution/
+backend/trained_models/resource/
+
+# ── Caches ───────────────────────────────────────────────
+backend/osmnx_cache/
+backend/catboost_info/
+catboost_info/
+osmnx_cache/
+
+# ── IDE / Editor ─────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# ── Docker ───────────────────────────────────────────────
+docker-compose.override.yml
+
+# ── TypeScript ───────────────────────────────────────────
+*.tsbuildinfo
+next-env.d.ts
+
+# ── Firebase / Genkit ────────────────────────────────────
+.genkit/
+firebase-debug.log
+firestore-debug.log
+
+# ── Misc ─────────────────────────────────────────────────
+*.log
+.vercel
+.idx/
+.modified
+
+# ── Original structure files (kept for reference) ────────
+# These are the old locations; code now lives in backend/ and frontend/
+# app/
+# tests/
+# trained_models/
+# Flipkart_Gridlock/
+# Dockerfile (old root-level)

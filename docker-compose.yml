@@ -1,0 +1,83 @@
+# ─────────────────────────────────────────────────────────────
+#  TRINETRA AI — Full Stack Docker Compose
+#  PostgreSQL + FastAPI Backend + Next.js Frontend
+# ─────────────────────────────────────────────────────────────
+
+services:
+  # ── PostgreSQL Database ──────────────────────────────────
+  postgres:
+    image: postgres:16-alpine
+    container_name: trinetra-postgres
+    environment:
+      POSTGRES_DB: trinetra_db
+      POSTGRES_USER: trinetra
+      POSTGRES_PASSWORD: trinetra_pass
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U trinetra -d trinetra_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  # ── FastAPI Backend ──────────────────────────────────────
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: trinetra-backend
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgresql://trinetra:trinetra_pass@postgres:5432/trinetra_db
+      - APP_ENV=production
+      - APP_DEBUG=false
+      - MODEL_DIR=/app/trained_models
+      - DATA_PATH=/app/data/events.csv
+      - OSMNX_CACHE_DIR=/app/osmnx_cache
+      - GEMINI_API_KEY=${GEMINI_API_KEY:-}
+    volumes:
+      - ./backend/trained_models:/app/trained_models
+      - ./backend/data:/app/data
+      - ./backend/osmnx_cache:/app/osmnx_cache
+    depends_on:
+      postgres:
+        condition: service_healthy
+    command: >
+      sh -c "
+        echo '🔱 Initializing TRINETRA AI Backend...' &&
+        python -c 'from app.database.connection import init_db; init_db()' &&
+        echo '✅ Database tables created' &&
+        uvicorn app.main:app --host 0.0.0.0 --port 8000
+      "
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      start_period: 15s
+      retries: 3
+    restart: unless-stopped
+
+  # ── Next.js Frontend ─────────────────────────────────────
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL:-http://localhost:8000}
+    container_name: trinetra-frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL:-http://localhost:8000}
+    depends_on:
+      backend:
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+    driver: local

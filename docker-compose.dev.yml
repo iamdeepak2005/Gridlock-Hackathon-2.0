@@ -1,0 +1,34 @@
+# ─────────────────────────────────────────────────────────────
+#  TRINETRA AI — Development Docker Compose Override
+#  Usage: docker-compose -f docker-compose.yml -f docker-compose.dev.yml up
+# ─────────────────────────────────────────────────────────────
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    environment:
+      - APP_ENV=development
+      - APP_DEBUG=true
+    volumes:
+      - ./backend/app:/app/app
+      - ./backend/tests:/app/tests
+      - ./backend/trained_models:/app/trained_models
+      - ./backend/data:/app/data
+      - ./backend/osmnx_cache:/app/osmnx_cache
+    command: >
+      sh -c "
+        python -c 'from app.database.connection import init_db; init_db()' &&
+        uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+      "
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:8000
+    volumes:
+      - ./frontend/src:/app/src
+      - ./frontend/public:/app/public

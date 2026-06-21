@@ -1,0 +1,109 @@
+@import "leaflet/dist/leaflet.css";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 215 27% 7%;
+    --foreground: 210 40% 98%;
+    --card: 217 33% 10%;
+    --card-foreground: 210 40% 98%;
+    --popover: 215 27% 7%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 206 100% 50%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 217 33% 15%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217 33% 15%;
+    --muted-foreground: 215 20% 65%;
+    --accent: 252 59% 58%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217 33% 18%;
+    --input: 217 33% 18%;
+    --ring: 206 100% 50%;
+    --radius: 0.5rem;
+    --chart-1: 206 100% 50%;
+    --chart-2: 252 59% 58%;
+    --chart-3: 160 60% 45%;
+    --chart-4: 30 80% 55%;
+    --chart-5: 0 84% 60%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+}
+
+.map-gradient {
+  background: radial-gradient(circle at center, rgba(0, 145, 255, 0.05) 0%, transparent 70%);
+}
+
+.pulse-red {
+  box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
+  animation: pulse-red 2s infinite;
+}
+
+@keyframes pulse-red {
+  0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+  70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
+  100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+}
+
+.glow-blue {
+  filter: drop-shadow(0 0 8px rgba(0, 145, 255, 0.4));
+}
+
+/* Leaflet custom map dark mode adjustment and flow animations */
+.leaflet-container {
+  background: #05070a !important;
+  font-family: inherit;
+}
+
+/* Custom Marker Styling */
+.custom-leaflet-marker {
+  background: transparent;
+  border: none;
+}
+
+/* Animations for traffic flows */
+.normal-flow-line {
+  stroke-dasharray: 8 6;
+  animation: flow-forward 30s linear infinite;
+}
+
+.detour-flow-line {
+  stroke-dasharray: 6 4;
+  animation: flow-forward 8s linear infinite;
+  filter: drop-shadow(0 0 4px #0091ff);
+}
+
+.blocked-road-line {
+  animation: pulse-blocked 2s ease-in-out infinite;
+}
+
+@keyframes flow-forward {
+  to {
+    stroke-dashoffset: -100;
+  }
+}
+
+@keyframes pulse-blocked {
+  0%, 100% {
+    opacity: 0.5;
+    stroke-width: 4px;
+  }
+  50% {
+    opacity: 1;
+    stroke-width: 6px;
+  }
+}
