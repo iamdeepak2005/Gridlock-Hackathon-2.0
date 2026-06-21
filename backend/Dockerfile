@@ -29,11 +29,8 @@ RUN mkdir -p trained_models data osmnx_cache
 # Optional data/models directories are created above and can be mounted as volumes.
 
 
-# Health check
-HEALTHCHECK --interval=30s --timeout=10s --start-period=10s --retries=3 \
-    CMD curl -f http://localhost:8000/health || exit 1
-
 EXPOSE 8000
 
 # Default command
 CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+
